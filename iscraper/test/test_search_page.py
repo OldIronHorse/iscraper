@@ -59,8 +59,21 @@ class TestEpisodeIds(TestCase):
         'iscraper/test/BBC iPlayer - Danger Mouse.html')) \
         as mock_urlopen:
       es = episodes('--DMPID--')
-      self.assertEqual(97, len(es))
-      print(es[0])
-      print(es[-1])
+      self.assertEqual(36, len(es))
+      self.assertEqual({
+        'pid': 'b06jm5q8',
+        'brand': 'Danger Mouse',
+        'series': 1,
+        'episode': 13,
+        'episode_title': 'The Unusual Suspects',
+      },es[0])  
+      self.assertEqual({
+        'pid': 'b06jm5q8',
+        'brand': 'Danger Mouse',
+        'series': 2,
+        'episode': 33,
+        'episode_title': 'The Scare Mouse Project',
+      },es[-1])  
+      #TODO: second page of results?
       mock_urlopen.assert_called_with(
           'https://www.bbc.co.uk/iplayer/episodes/--DMPID--')

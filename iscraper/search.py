@@ -10,7 +10,11 @@ def programme_id(title):
   with urllib.request.urlopen(search_url(title)) as search_page:
     search_soup = BeautifulSoup(search_page.read(), 'html.parser')
     prog_block = search_soup.find('li', {'class':'programme'})
-    return prog_block['data-ip-id']
+    if prog_block and \
+        prog_block.find('a')['title'].upper().startswith(title.upper()):
+      return prog_block['data-ip-id']
+    else:
+      return None
 
 def episodes(prog_id):
   progs = []
@@ -23,14 +27,15 @@ def episodes(prog_id):
       prog = { 
         'brand': brand,
         'pid': episode['href'].split('/')[3],
-        #'episode_title': episode.find('span',{'class':'programme__title'})\
-            #.find('span',{'property':'name'}).text,
       }
       title = episode.find('div', {'class':'content-item__title'}).text.split(':')
       prog['episode_title'] = title[-1].strip()
-      prog['episode'] = int(prog['episode_title'].split(' ')[-1])
-      #series_title = episode.find('span',{'class':'programme__subtitle'})\
-            #.find('span',{'property':'name'}).text
+      try:
+        prog['episode'] = int(prog['episode_title'].split(' ')[-1])
+      except ValueError:
+        episode_title = prog['episode_title'].split('.', 1)
+        prog['episode'] = int(episode_title[0])
+        prog['episode_title'] = episode_title[1].strip()
       prog['series'] = int(title[0].split(' ')[-1])
       progs.append(prog)
     return sorted(progs, key=lambda p: '{:2}:{:2}'.format(p['series'],p['episode']))

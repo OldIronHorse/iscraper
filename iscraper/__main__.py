@@ -13,16 +13,19 @@ args = parser.parse_args()
 print(args)
 prog_id = programme_id(args.title)
 print(prog_id)
-progs = episodes(prog_id)
-print('Available episodes:')
-for p in progs:
-  print('\t', p)
-history = download_history()
-progs_to_get = [p for p in progs if p['pid'] not in history]
+if prog_id:
+  progs = episodes(prog_id)
+  print('Available episodes:')
+  for p in progs:
+    print('\t', p)
+  history = download_history()
+  progs_to_get = [p for p in progs if p['pid'] not in history]
 
-for prog in progs_to_get:
-  print('Downloading: ', prog)
-  if not args.simulate:
-    get_iplayer(prog, args.outputdir)
-  else:
-    print('Simulation only, no download')
+  for prog in progs_to_get:
+    print('Downloading: ', prog)
+    if not args.simulate:
+      get_iplayer(prog, args.outputdir)
+    else:
+      print('Simulation only, no download')
+else:
+  print('No episodes available.')
