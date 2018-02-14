@@ -11,7 +11,8 @@ def programme_id(title):
     search_soup = BeautifulSoup(search_page.read(), 'html.parser')
     prog_block = search_soup.find('li', {'class':'programme'})
     if prog_block and \
-        prog_block.find('a')['title'].upper().startswith(title.upper()):
+        prog_block.find('a')['title'].split(',',1)[0].upper() == title.upper():
+      print(prog_block.find('a')['title'])
       return prog_block['data-ip-id']
     else:
       return None
