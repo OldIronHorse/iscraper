@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from iscraper import search_url, programme_id, episodes
+from iscraper import search_url, programme_id, episodes, programme_from_title
 
 class TestSearchURL(TestCase):
   def test_no_special_chars(self):
@@ -77,3 +77,18 @@ class TestEpisodeIds(TestCase):
       #TODO: second page of results?
       mock_urlopen.assert_called_with(
           'https://www.bbc.co.uk/iplayer/episodes/--DMPID--')
+          
+class TestProgrammeFromTitle(TestCase):
+  def test_title_series_episode(self):
+    self.assertEqual({
+      'series': 2,
+      'episode': 1,
+      'episode_title': 'Episode 1',
+    }, programme_from_title('Series 2: Episode 1'))
+
+  def test_title_episode(self):
+    self.assertEqual({
+      'series': 1,
+      'episode': 5,
+      'episode_title': 'Beat Feet',
+    }, programme_from_title('5. Beat Feet'))

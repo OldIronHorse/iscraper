@@ -12,7 +12,6 @@ parser.add_argument('-s', '--simulate', action='store_true',
 args = parser.parse_args()
 print(args)
 prog_id = programme_id(args.title)
-print(prog_id)
 if prog_id:
   progs = episodes(prog_id)
   print('Available episodes:')

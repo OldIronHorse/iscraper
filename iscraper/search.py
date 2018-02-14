@@ -12,7 +12,6 @@ def programme_id(title):
     prog_block = search_soup.find('li', {'class':'programme'})
     if prog_block and \
         prog_block.find('a')['title'].split(',',1)[0].upper() == title.upper():
-      print(prog_block.find('a')['title'])
       return prog_block['data-ip-id']
     else:
       return None
@@ -29,14 +28,33 @@ def episodes(prog_id):
         'brand': brand,
         'pid': episode['href'].split('/')[3],
       }
-      title = episode.find('div', {'class':'content-item__title'}).text.split(':')
-      prog['episode_title'] = title[-1].strip()
-      try:
-        prog['episode'] = int(prog['episode_title'].split(' ')[-1])
-      except ValueError:
-        episode_title = prog['episode_title'].split('.', 1)
-        prog['episode'] = int(episode_title[0])
-        prog['episode_title'] = episode_title[1].strip()
-      prog['series'] = int(title[0].split(' ')[-1])
+      prog.update(programme_from_title(episode.find('div', 
+          {'class':'content-item__title'}).text))
       progs.append(prog)
     return sorted(progs, key=lambda p: '{:2}:{:2}'.format(p['series'],p['episode']))
+
+def programme_from_title(title):
+  try:
+    #Series 1: Episode 2
+    [series, episode] = title.strip().split(':', 1)
+    [series_name, series_number] = series.split(' ', 1)
+    series_number = int(series_number)
+    episode_title = episode.strip()
+  except ValueError:
+    #3. Episode Title
+    series_number = 1
+    episode_title = title
+  [_, episode_number] = episode_title.split(' ', 1)
+  try:
+    episode_number = int(episode_number)
+  except ValueError:
+    #Series 1: 2. Episode Title
+    [episode_number, episode_title] = episode_title.split('.', 1)
+    episode_number = int(episode_number)
+    episode_title = episode_title.strip()
+    
+  return {
+    'series': series_number,
+    'episode': episode_number,
+    'episode_title': episode_title,
+  }
