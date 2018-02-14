@@ -5,7 +5,7 @@ setup(
   version='0.2',
   description='Front end for get-iplayer to allow download by name.',
   url='https://github.com/oldironhorse/iscraper',
-  download_url='https://github.com/oldironhorse/iscraper/archive/0.1.tar.gz',
+  download_url='https://github.com/oldironhorse/iscraper/archive/0.2.tar.gz',
   author='Simon Redding',
   author_email='s1m0n.r3dd1ng@gmail.com',
   license='GPL 3.0',
