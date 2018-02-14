@@ -68,10 +68,10 @@ class TestEpisodeIds(TestCase):
         'episode_title': 'The Unusual Suspects',
       },es[0])  
       self.assertEqual({
-        'pid': 'b06jm5q8',
+        'pid': 'b09dc9l0',
         'brand': 'Danger Mouse',
         'series': 2,
-        'episode': 33,
+        'episode': 23,
         'episode_title': 'The Scare Mouse Project',
       },es[-1])  
       #TODO: second page of results?
