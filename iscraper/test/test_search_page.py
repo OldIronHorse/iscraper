@@ -35,7 +35,7 @@ class TestEpisodeIds(TestCase):
   def test_multiple_episodes(self):
     with patch('urllib.request.urlopen', 
         return_value=open(
-        'iscraper/test/BBC Four - Modus - Available now.html')) \
+        'iscraper/test/BBC iPlayer - Modus.html')) \
         as mock_urlopen:
       self.assertEqual([{
         'pid': 'b09mktwz',
@@ -51,4 +51,16 @@ class TestEpisodeIds(TestCase):
         'episode_title': 'Episode 2',
       }], episodes('b0644tbl'))
       mock_urlopen.assert_called_with(
-          'https://www.bbc.co.uk/programmes/b0644tbl/episodes/player')
+          'https://www.bbc.co.uk/iplayer/episodes/b0644tbl')
+
+  def test_cbbc_danger_mouse(self):
+    with patch('urllib.request.urlopen', 
+        return_value=open(
+        'iscraper/test/BBC iPlayer - Danger Mouse.html')) \
+        as mock_urlopen:
+      es = episodes('--DMPID--')
+      self.assertEqual(97, len(es))
+      print(es[0])
+      print(es[-1])
+      mock_urlopen.assert_called_with(
+          'https://www.bbc.co.uk/iplayer/episodes/--DMPID--')
