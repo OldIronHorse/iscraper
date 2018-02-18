@@ -58,3 +58,18 @@ def programme_from_title(title):
     'episode': episode_number,
     'episode_title': episode_title,
   }
+
+def films_from_page(page=1):
+  with urllib.request.urlopen(
+      'https://www.bbc.co.uk/iplayer/categories/films/all?{}'.format(
+        urllib.parse.urlencode({'sort':'atoz','page':page}))) as films_page:
+    page_soup = BeautifulSoup(films_page, 'html.parser')
+    films = [{'pid': f['data-ip-id'], 'title': f.find('a')['title']} 
+             for f in page_soup('li', {'class': 'programme'})]
+    if films:
+      return films + films_from_page(page + 1)
+    else:
+      return []
+
+def films():
+  return films_from_page()

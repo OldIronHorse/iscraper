@@ -13,9 +13,7 @@ class TestRunGetIplayer(TestCase):
       'episode': 12,
       'episode_title': 'The Last One',
     }
-
     get_iplayer(prog, 'the/output/dir')
-
     subprocess_call.assert_called_with([
       '/usr/bin/get-iplayer',
       '--type', 'tv',
@@ -23,6 +21,22 @@ class TestRunGetIplayer(TestCase):
       '--file-prefix', 'The Brand-s06e12-The Last One',
       '--output', 'the/output/dir',
     ])
+  
+  @patch('subprocess.call')
+  def test_valid_film(self, subprocess_call):
+    film = {
+      'pid': 'abc12345',
+      'title': 'The Best Film Ever',
+    }
+    get_iplayer(film, 'the/output/dir')
+    subprocess_call.assert_called_with([
+      '/usr/bin/get-iplayer',
+      '--type', 'tv',
+      '--pid', 'abc12345',
+      '--file-prefix', 'The Best Film Ever',
+      '--output', 'the/output/dir',
+    ])
+
     
 class TestDownloadHistory(TestCase):
   def test_valid_history_file(self):

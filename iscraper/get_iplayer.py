@@ -2,13 +2,15 @@ import subprocess
 import os
 
 def file_prefix(prog):
-  return '{}-s{:02}e{:02}-{}'.format(
-    prog['brand'],
-    prog['series'],
-    prog['episode'],
-    prog['episode_title']
-  )
-  pass
+  try:
+    return '{}-s{:02}e{:02}-{}'.format(
+      prog['brand'],
+      prog['series'],
+      prog['episode'],
+      prog['episode_title']
+    )
+  except KeyError:
+    return prog['title']
 
 def get_iplayer(prog, output_dir):
   subprocess.call([

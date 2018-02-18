@@ -1,7 +1,10 @@
 from unittest import TestCase
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, call
 
-from iscraper import search_url, programme_id, episodes, programme_from_title
+import urllib.parse
+
+from iscraper import search_url, programme_id, episodes, programme_from_title,\
+  films
 
 class TestSearchURL(TestCase):
   def test_no_special_chars(self):
@@ -92,3 +95,48 @@ class TestProgrammeFromTitle(TestCase):
       'episode': 5,
       'episode_title': 'Beat Feet',
     }, programme_from_title('5. Beat Feet'))
+    
+class TestFilms(TestCase):
+  def test_all_films_multiple_pages(self):
+    with patch('urllib.request.urlopen',
+        side_effect=(open('iscraper/test/BBC iPlayer - Films.html'),
+                     open('iscraper/test/BBC iPlayer - Films 2.html'),
+                     open('iscraper/test/BBC iPlayer - Films 3.html'))) \
+        as mock_urlopen:
+        fs = films()
+        self.assertEqual(24, len(fs))
+        self.assertEqual({
+            'pid': 'b04jj2zn',
+            'title': 'Before the Winter Chill',
+          },fs[1])
+        # Query strings
+        self.assertEqual([{
+            'sort': ['atoz'],
+            'page': ['1'],
+          },{
+            'sort': ['atoz'],
+            'page': ['2'],
+          },{
+            'sort': ['atoz'],
+            'page': ['3'],
+          }
+        ],[urllib.parse.parse_qs(urllib.parse.urlparse(args[0]).query) 
+            for name, args, kwargs in mock_urlopen.mock_calls])
+        # Pages
+        self.assertEqual([
+          ('https', 'www.bbc.co.uk', '/iplayer/categories/films/all', {
+            'sort': ['atoz'],
+            'page': ['1'],
+          }),
+          ('https', 'www.bbc.co.uk', '/iplayer/categories/films/all', {
+            'sort': ['atoz'],
+            'page': ['2'],
+          }),
+          ('https', 'www.bbc.co.uk', '/iplayer/categories/films/all', {
+            'sort': ['atoz'],
+            'page': ['3'],
+          })
+        ],[(u.scheme, u.netloc, u.path, urllib.parse.parse_qs(u.query)) 
+            for u in [urllib.parse.urlparse(args[0])
+              for name, args, kwargs in mock_urlopen.mock_calls]])
+          
