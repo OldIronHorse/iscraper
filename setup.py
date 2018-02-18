@@ -2,10 +2,10 @@ from setuptools import setup
 
 setup(
   name='iscraper',
-  version='0.4',
+  version='0.5',
   description='Front end for get-iplayer to allow download by name.',
   url='https://github.com/oldironhorse/iscraper',
-  download_url='https://github.com/oldironhorse/iscraper/archive/0.4.tar.gz',
+  download_url='https://github.com/oldironhorse/iscraper/archive/0.5.tar.gz',
   author='Simon Redding',
   author_email='s1m0n.r3dd1ng@gmail.com',
   license='GPL 3.0',
