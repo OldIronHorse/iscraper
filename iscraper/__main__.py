@@ -15,6 +15,7 @@ parser.add_argument('-s', '--simulate', action='store_true',
                     help='find programmes but do not download')
 args = parser.parse_args()
 print(args)
+progs = []
 if args.films:
   progs = films()
   print('Available films:')
